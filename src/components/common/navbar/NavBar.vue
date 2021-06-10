@@ -5,7 +5,11 @@
     <div class="right"><slot name="right"></slot></div>
   </div>
 </template>
-
+<script>
+export default {
+  name: "NavBar"
+};
+</script>
 <style>
 .nav-bar {
   height: 44px;

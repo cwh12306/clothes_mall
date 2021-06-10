@@ -7,10 +7,23 @@
 </template>
 <script>
 import NavBar from "$components/common/navbar/NavBar";
+import { getHomeMultiData } from "$network/home";
 export default {
   name: "Home",
   components: {
     NavBar
+  },
+  data() {
+    return {
+      banners: [],
+      recommends: []
+    };
+  },
+  created() {
+    getHomeMultiData().then(result => {
+      this.banners = result.data.banner.list;
+      this.recommends = result.data.recommend.list;
+    });
   }
 };
 </script>

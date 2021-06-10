@@ -6,8 +6,8 @@ module.exports = {
         $components: "@/components",
         $network: "@/network",
         $common: "@/common",
-        $views: "@/views",
-      },
-    },
-  },
+        $views: "@/views"
+      }
+    }
+  }
 };

@@ -32,6 +32,7 @@ export default {
   methods: {
     changeItem(index) {
       this.currentIndex = index;
+      this.$emit("itemChange", index);
     }
   }
 };

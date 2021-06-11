@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <div class="swiper">
-      <swiper>
-        <swiper-item v-for="(item, index) in banners" :key="index">
-          <a :href="item.link">
-            <img :src="item.image" alt="" />
-          </a>
-        </swiper-item>
-      </swiper>
-    </div>
+  <div class="home-swiper">
+    <swiper>
+      <swiper-item v-for="(item, index) in banners" :key="index">
+        <a :href="item.link">
+          <img :src="item.image" alt="" />
+        </a>
+      </swiper-item>
+    </swiper>
   </div>
 </template>
 <script>
@@ -29,7 +27,7 @@ export default {
 };
 </script>
 <style>
-.swiper {
-  padding-top: 22px;
+.home-swiper {
+  padding-top: 44px;
 }
 </style>

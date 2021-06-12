@@ -7,7 +7,9 @@
       class="content"
       ref="scroll"
       @b-scroll="toggleBackTop"
+      @touchBottom="getHomeData(currentType)"
       :probeType="3"
+      :pullUpLoad="true"
       ><home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view />
@@ -18,13 +20,13 @@
       ></tab-Control>
       <goods-list
         :goodsListInfo="goods['pop'].list"
-        v-show="currentGoodsListIndex === 0"/>
+        v-show="currentType === 'pop'"/>
       <goods-list
         :goodsListInfo="goods['new'].list"
-        v-show="currentGoodsListIndex === 1"/>
+        v-show="currentType === 'new'"/>
       <goods-list
         :goodsListInfo="goods['sell'].list"
-        v-show="currentGoodsListIndex === 2"
+        v-show="currentType === 'sell'"
     /></Scroll>
     <back-top @click.native="backToTop" v-show="isShow" />
   </div>
@@ -63,7 +65,7 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
       },
-      currentGoodsListIndex: 0,
+      currentType: "pop",
       isShow: false
     };
   },
@@ -90,7 +92,18 @@ export default {
     },
     /*事件监听相关方法 */
     itemChange(index) {
-      this.currentGoodsListIndex = index;
+      switch (index) {
+        case 0:
+          this.currentType = "pop";
+          break;
+        case 1:
+          this.currentType = "new";
+          break;
+        case 2:
+          this.currentType = "sell";
+          break;
+      }
+      this.$refs.scroll.refresh();
     },
     backToTop() {
       this.$refs.scroll.scrollTo(0, 0);
@@ -127,4 +140,9 @@ export default {
   right: 0;
   overflow: hidden;
 }
+/*.content {
+  overflow: hidden;
+  height: calc(100% - 93px);
+  margin-top: 44px;
+} */
 </style>

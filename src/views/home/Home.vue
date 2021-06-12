@@ -3,7 +3,11 @@
     <nav-bar class="home-nav"
       ><template v-slot:center><div>购物街</div></template></nav-bar
     >
-    <Scroll class="content"
+    <Scroll
+      class="content"
+      ref="scroll"
+      @b-scroll="toggleBackTop"
+      :probeType="3"
       ><home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view />
@@ -22,6 +26,7 @@
         :goodsListInfo="goods['sell'].list"
         v-show="currentGoodsListIndex === 2"
     /></Scroll>
+    <back-top @click.native="backToTop" v-show="isShow" />
   </div>
 </template>
 <script>
@@ -33,6 +38,7 @@ import NavBar from "$components/common/navbar/NavBar";
 import TabControl from "$components/content/tabControl/TabControl";
 import GoodsList from "$components/content/goodsList/GoodsList";
 import Scroll from "$components/common/bscroll/Scroll";
+import BackTop from "$components/content/backtop/BackTop";
 
 import { getHomeMultiData, getHomeData } from "$network/home";
 
@@ -45,7 +51,8 @@ export default {
     FeatureView,
     TabControl,
     GoodsList,
-    Scroll
+    Scroll,
+    BackTop
   },
   data() {
     return {
@@ -56,7 +63,8 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
       },
-      currentGoodsListIndex: 0
+      currentGoodsListIndex: 0,
+      isShow: false
     };
   },
   created() {
@@ -83,6 +91,12 @@ export default {
     /*事件监听相关方法 */
     itemChange(index) {
       this.currentGoodsListIndex = index;
+    },
+    backToTop() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    toggleBackTop(position) {
+      this.isShow = -position.y > 1000;
     }
   }
 };

@@ -2,26 +2,26 @@
   <div id="home">
     <nav-bar class="home-nav"
       ><template v-slot:center><div>购物街</div></template></nav-bar
-    ><home-swiper :banners="banners" />
-    <recommend-view :recommends="recommends" />
-    <feature-view />
-    <tab-Control
-      :title="['流行', '新款', '精选']"
-      class="home-tab-control"
-      @itemChange="itemChange"
-    ></tab-Control>
-    <goods-list
-      :goodsListInfo="goods['pop'].list"
-      v-show="currentGoodsListIndex === 0"
-    />
-    <goods-list
-      :goodsListInfo="goods['new'].list"
-      v-show="currentGoodsListIndex === 1"
-    />
-    <goods-list
-      :goodsListInfo="goods['sell'].list"
-      v-show="currentGoodsListIndex === 2"
-    />
+    >
+    <Scroll class="content"
+      ><home-swiper :banners="banners"/>
+      <recommend-view :recommends="recommends"/>
+      <feature-view />
+      <tab-Control
+        :title="['流行', '新款', '精选']"
+        class="home-tab-control"
+        @itemChange="itemChange"
+      ></tab-Control>
+      <goods-list
+        :goodsListInfo="goods['pop'].list"
+        v-show="currentGoodsListIndex === 0"/>
+      <goods-list
+        :goodsListInfo="goods['new'].list"
+        v-show="currentGoodsListIndex === 1"/>
+      <goods-list
+        :goodsListInfo="goods['sell'].list"
+        v-show="currentGoodsListIndex === 2"
+    /></Scroll>
   </div>
 </template>
 <script>
@@ -32,6 +32,7 @@ import FeatureView from "./childComponents/FeatureView";
 import NavBar from "$components/common/navbar/NavBar";
 import TabControl from "$components/content/tabControl/TabControl";
 import GoodsList from "$components/content/goodsList/GoodsList";
+import Scroll from "$components/common/bscroll/Scroll";
 
 import { getHomeMultiData, getHomeData } from "$network/home";
 
@@ -43,7 +44,8 @@ export default {
     RecommendView,
     FeatureView,
     TabControl,
-    GoodsList
+    GoodsList,
+    Scroll
   },
   data() {
     return {
@@ -86,6 +88,10 @@ export default {
 };
 </script>
 <style scoped>
+#home {
+  position: relative;
+  height: 100vh;
+}
 .home-nav {
   background-color: var(--color-tint);
   color: white;
@@ -98,5 +104,13 @@ export default {
 .home-tab-control {
   position: sticky;
   top: 44px;
+}
+.content {
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
 }
 </style>

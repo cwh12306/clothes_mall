@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .tab-bar {
   display: flex;
   position: fixed;

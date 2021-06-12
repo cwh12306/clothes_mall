@@ -24,7 +24,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .recommend-view {
   display: flex;
   padding-top: 10px;

@@ -13,14 +13,14 @@ export default {
       type: String,
       default() {
         return "white";
-      },
+      }
     },
     activeBgColor: {
       type: String,
       default() {
         return "black";
-      },
-    },
+      }
+    }
   },
   computed: {
     isActive() {
@@ -30,18 +30,18 @@ export default {
       return this.isActive
         ? { color: this.activeColor, background: this.activeBgColor }
         : {};
-    },
+    }
   },
   methods: {
     routeView() {
       if (this.$route.path != this.link) {
         this.$router.replace(this.link);
       }
-    },
-  },
+    }
+  }
 };
 </script>
-<style>
+<style scoped>
 .tab-bar-item {
   flex: 1;
   text-align: center;

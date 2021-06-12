@@ -43,7 +43,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .goods-list-item {
   width: 48%;
   padding: 2px;

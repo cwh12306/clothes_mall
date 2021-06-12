@@ -10,7 +10,7 @@ export default {
   name: "NavBar"
 };
 </script>
-<style>
+<style scoped>
 .nav-bar {
   height: 44px;
   display: flex;

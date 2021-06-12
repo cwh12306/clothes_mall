@@ -85,7 +85,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .home-nav {
   background-color: var(--color-tint);
   color: white;

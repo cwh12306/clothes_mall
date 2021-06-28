@@ -1,16 +1,10 @@
 <template>
-  <div class="goods-list-item">
-    <img :src="goodItemInfo.show.img" alt="" />
+  <div class="goods-list-item" @click="itemClick">
+    <img :src="goodItemInfo.show.img" alt="" @load="imageLoaded" />
     <div>
       <span class="GoodsListItemTitle">{{ goodItemInfo.title }}</span>
       <span class="GoodsListItemPrice">{{ goodItemInfo.price }}</span>
-      <span
-        class="GoodsListItemStar"
-        @click="starItem"
-        :class="{ stared: isStared }"
-        ><i class="far fa-star" v-if="!isStared"></i
-        ><i class="fas fa-star" v-else> </i>
-      </span>
+      <span class="GoodsListItemStar"><i class="far fa-star"></i> </span>
       <span class="GoodsListItemCfav">{{ goodItemInfo.cfav }}</span>
     </div>
   </div>
@@ -19,9 +13,7 @@
 export default {
   name: "GoodsListItem",
   data() {
-    return {
-      isStared: false
-    };
+    return {};
   },
   props: {
     goodItemInfo: {
@@ -32,13 +24,15 @@ export default {
     }
   },
   methods: {
-    starItem() {
-      this.isStared = !this.isStared;
-      if (this.isStared) {
-        this.goodItemInfo.cfav = parseInt(this.goodItemInfo.cfav) + 1;
-      } else {
-        this.goodItemInfo.cfav = parseInt(this.goodItemInfo.cfav) - 1;
-      }
+    imageLoaded() {
+      //防抖函数，防止每张图片加载完都执行一次refresh。提高性能。
+      clearTimeout(this.$store.state.timer);
+      this.$store.state.timer = setTimeout(() => {
+        this.$store.state.scroll.refresh();
+      }, 200);
+    },
+    itemClick() {
+      this.$router.push("/detail/" + this.goodItemInfo.iid);
     }
   }
 };
@@ -70,8 +64,5 @@ export default {
 .goods-list-item > div > .GoodsListItemStar {
   font-size: 16px;
   margin: 0 4px;
-}
-.stared {
-  color: var(--color-high-text);
 }
 </style>

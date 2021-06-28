@@ -25,37 +25,27 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      scroll: null
-    };
-  },
   mounted() {
-    setTimeout(() => {
-      this.scroll = new BScroll(this.$refs.wrapper, {
-        click: true,
-        probeType: this.probeType,
-        pullUpLoad: this.pullUpLoad
-      });
-      this.scroll.on("scroll", position => {
-        this.$emit("b-scroll", position);
-      });
-      this.scroll.on("pullingUp", () => {
-        this.$emit("touchBottom");
-        this.scroll.finishPullUp();
-        //使BS对象刷新一下，加载了新的数据后可以继续滚动
-        setTimeout(() => {
-          this.scroll.refresh();
-        }, 500);
-      });
-    }, 500);
+    this.$store.state.scroll = new BScroll(this.$refs.wrapper, {
+      click: true,
+      probeType: this.probeType,
+      pullUpLoad: this.pullUpLoad
+    });
+    this.$store.state.scroll.on("scroll", position => {
+      this.$emit("b-scroll", position);
+    });
+    //上拉加载更多
+    this.$store.state.scroll.on("pullingUp", () => {
+      this.$emit("touchBottom");
+      this.$store.state.scroll.finishPullUp();
+    });
   },
   methods: {
     scrollTo(x, y, time = 500) {
-      this.scroll.scrollTo(x, y, time);
+      this.$store.state.scroll.scrollTo(x, y, time);
     },
     refresh() {
-      this.scroll.refresh();
+      this.$store.state.scroll.refresh();
     }
   }
 };

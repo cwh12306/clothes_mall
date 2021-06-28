@@ -3,31 +3,30 @@
     <nav-bar class="home-nav"
       ><template v-slot:center><div>购物街</div></template></nav-bar
     >
+    <tab-Control
+      :title="['流行', '新款', '精选']"
+      @itemChange="itemChange"
+      ref="tabControl1"
+      class="tabSticky"
+      v-show="isFixed"
+    ></tab-Control>
     <Scroll
       class="content"
       ref="scroll"
-      @b-scroll="toggleBackTop"
+      @b-scroll="listenScroll"
       @touchBottom="getHomeData(currentType)"
       :probeType="3"
       :pullUpLoad="true"
-      ><home-swiper :banners="banners"/>
-      <recommend-view :recommends="recommends"/>
+      ><home-swiper :banners="banners" @swiperImageLoaded="swiperImageLoaded" />
+      <recommend-view :recommends="recommends" />
       <feature-view />
       <tab-Control
         :title="['流行', '新款', '精选']"
-        class="home-tab-control"
         @itemChange="itemChange"
+        ref="tabControl2"
       ></tab-Control>
-      <goods-list
-        :goodsListInfo="goods['pop'].list"
-        v-show="currentType === 'pop'"/>
-      <goods-list
-        :goodsListInfo="goods['new'].list"
-        v-show="currentType === 'new'"/>
-      <goods-list
-        :goodsListInfo="goods['sell'].list"
-        v-show="currentType === 'sell'"
-    /></Scroll>
+      <goods-list :goodsListInfo="goods[currentType].list" />
+    </Scroll>
     <back-top @click.native="backToTop" v-show="isShow" />
   </div>
 </template>
@@ -66,7 +65,9 @@ export default {
         sell: { page: 0, list: [] }
       },
       currentType: "pop",
-      isShow: false
+      isShow: false,
+      isFixed: false,
+      tabToOffsetTop: 0
     };
   },
   created() {
@@ -91,6 +92,7 @@ export default {
       });
     },
     /*事件监听相关方法 */
+    //点击触控栏切换栏目
     itemChange(index) {
       switch (index) {
         case 0:
@@ -104,12 +106,23 @@ export default {
           break;
       }
       this.$refs.scroll.refresh();
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
+    //回到顶部
     backToTop() {
       this.$refs.scroll.scrollTo(0, 0);
     },
-    toggleBackTop(position) {
+    //监听页面滚动到的位置
+    listenScroll(position) {
+      //是否显示回到顶部按钮
       this.isShow = -position.y > 1000;
+      //是否吸顶
+      this.isFixed = -position.y > this.tabToOffsetTop;
+    },
+    //当轮播图的图片加载完成后，实现触控栏吸顶效果
+    swiperImageLoaded() {
+      this.tabToOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     }
   }
 };
@@ -122,15 +135,12 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: white;
-  position: fixed;
+  /*由于使用了better-scroll，导航组件在Bscroll滚动区域外即可实现不随页面滚动而滚动的效果 */
+  /*  position: fixed;
   left: 0;
   top: 0;
   right: 0;
-  z-index: 9;
-}
-.home-tab-control {
-  position: sticky;
-  top: 44px;
+  z-index: 9;*/
 }
 .content {
   position: absolute;
@@ -145,4 +155,8 @@ export default {
   height: calc(100% - 93px);
   margin-top: 44px;
 } */
+.tabSticky {
+  position: relative;
+  z-index: 10;
+}
 </style>

@@ -18,6 +18,11 @@ export default {
         return 0;
       }
     },
+    data() {
+      return {
+        scroll: null
+      };
+    },
     pullUpLoad: {
       type: Boolean,
       default() {
@@ -26,26 +31,30 @@ export default {
     }
   },
   mounted() {
-    this.$store.state.scroll = new BScroll(this.$refs.wrapper, {
+    this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad
     });
-    this.$store.state.scroll.on("scroll", position => {
+    this.scroll.on("scroll", position => {
       this.$emit("b-scroll", position);
     });
     //上拉加载更多
-    this.$store.state.scroll.on("pullingUp", () => {
-      this.$emit("touchBottom");
-      this.$store.state.scroll.finishPullUp();
-    });
+    if (this.pullUpLoad) {
+      this.scroll.on("pullingUp", () => {
+        this.$emit("touchBottom");
+      });
+    }
   },
   methods: {
     scrollTo(x, y, time = 500) {
-      this.$store.state.scroll.scrollTo(x, y, time);
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
     refresh() {
-      this.$store.state.scroll.refresh();
+      this.scroll && this.scroll.refresh();
+    },
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp();
     }
   }
 };

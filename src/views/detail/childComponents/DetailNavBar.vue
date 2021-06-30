@@ -39,6 +39,7 @@ export default {
   methods: {
     detailItemChange(index) {
       this.currentIndex = index;
+      this.$emit("navChange", index);
     },
     backTo() {
       this.$router.back();

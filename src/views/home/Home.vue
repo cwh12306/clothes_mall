@@ -39,12 +39,13 @@ import NavBar from "$components/common/navbar/NavBar";
 import TabControl from "$components/content/tabControl/TabControl";
 import GoodsList from "$components/content/goodsList/GoodsList";
 import Scroll from "$components/common/bscroll/Scroll";
-import BackTop from "$components/content/backtop/BackTop";
 
 import { getHomeMultiData, getHomeData } from "$network/home";
-
+import { debounce } from "$common/utils.js";
+import { backTopVue } from "$common/mixin.js";
 export default {
   name: "Home",
+  mixins: [backTopVue],
   components: {
     NavBar,
     HomeSwiper,
@@ -52,8 +53,7 @@ export default {
     FeatureView,
     TabControl,
     GoodsList,
-    Scroll,
-    BackTop
+    Scroll
   },
   data() {
     return {
@@ -64,10 +64,7 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
       },
-      currentType: "pop",
-      isShow: false,
-      isFixed: false,
-      tabToOffsetTop: 0
+      currentType: "pop"
     };
   },
   created() {
@@ -90,6 +87,8 @@ export default {
         this.goods[type].list.push(...result.data.list);
         this.goods[type].page += 1;
       });
+      //刷新上拉事件冷却
+      this.$refs.scroll && this.$refs.scroll.finishPullUp();
     },
     /*事件监听相关方法 */
     //点击触控栏切换栏目
@@ -109,10 +108,6 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    //回到顶部
-    backToTop() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     //监听页面滚动到的位置
     listenScroll(position) {
       //是否显示回到顶部按钮
@@ -124,6 +119,12 @@ export default {
     swiperImageLoaded() {
       this.tabToOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     }
+  },
+  mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 50);
+    this.$bus.$on("homeItemImageLoad", () => {
+      refresh();
+    });
   }
 };
 </script>

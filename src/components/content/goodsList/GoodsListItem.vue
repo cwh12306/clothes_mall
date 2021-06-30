@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list-item" @click="itemClick">
-    <img :src="goodItemInfo.show.img" alt="" @load="imageLoaded" />
+    <img :src="showImage" alt="" @load="imageLoaded" />
     <div>
       <span class="GoodsListItemTitle">{{ goodItemInfo.title }}</span>
       <span class="GoodsListItemPrice">{{ goodItemInfo.price }}</span>
@@ -15,6 +15,11 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    showImage() {
+      return this.goodItemInfo.image || this.goodItemInfo.show.img;
+    }
+  },
   props: {
     goodItemInfo: {
       type: Object,
@@ -25,11 +30,11 @@ export default {
   },
   methods: {
     imageLoaded() {
-      //防抖函数，防止每张图片加载完都执行一次refresh。提高性能。
-      clearTimeout(this.$store.state.timer);
-      this.$store.state.timer = setTimeout(() => {
-        this.$store.state.scroll.refresh();
-      }, 200);
+      if (this.$route.path.includes("/home")) {
+        this.$bus.$emit("homeItemImageLoad");
+      } else if (this.$route.path.includes("/detail")) {
+        this.$bus.$emit("detailItemImageLoad");
+      }
     },
     itemClick() {
       this.$router.push("/detail/" + this.goodItemInfo.iid);

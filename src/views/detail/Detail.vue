@@ -20,7 +20,7 @@
       <goods-list :goodsListInfo="recommendList" ref="recommend" />
     </Scroll>
     <back-top @click.native="backToTop" v-show="isShow" />
-    <detail-bottom-bar />
+    <detail-bottom-bar @addToCart="addCart" />
   </div>
 </template>
 
@@ -148,6 +148,19 @@ export default {
           this.$refs.detailNavBar.currentIndex = this.currentIndex;
         }
       }
+    },
+    //加入购物车
+    addCart() {
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+
+      this.$store.dispatch({ type: "addToCartList", product }).then(result => {
+        this.$toast.show(result);
+      });
     }
   }
 };
@@ -167,5 +180,6 @@ export default {
 }
 .detail-content {
   height: calc(100% - 44px - 49px);
+  overflow: hidden;
 }
 </style>

@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="bottom-bar-option">
-      <div class="addToCart"><p>加入购物车</p></div>
+      <div class="addToCart" @click="addToCart"><p>加入购物车</p></div>
       <div class="cwh-buy"><p>购买</p></div>
     </div>
   </div>
@@ -23,7 +23,12 @@
 
 <script>
 export default {
-  name: "DetailBottomBar"
+  name: "DetailBottomBar",
+  methods: {
+    addToCart() {
+      this.$emit("addToCart");
+    }
+  }
 };
 </script>
 
